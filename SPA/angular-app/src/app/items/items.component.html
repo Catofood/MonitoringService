@@ -1,0 +1,7 @@
+<div class="container">
+    <h1>Список элементов</h1>
+    <button (click)="refreshData()">Обновить данные</button>
+    <ul>
+        <li *ngFor="let item of items">{item.name}</li>
+    </ul>
+</div>
