@@ -1,2 +1,3 @@
-# InfotecsInternTest
+# Monitoring Service
+
 Тестовое задание для стажера по направлению «Программист на языке C#»
