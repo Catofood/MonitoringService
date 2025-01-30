@@ -33,7 +33,7 @@ public class DeviceSessionController : ControllerBase
         var log = string.Empty;
         if (dSessions.Any() == false)
         {
-            log = $"GET: No device sessions with ID {id} were found.";
+            log = $"GET: No device se   ssions with ID {id} were found.";
             Console.WriteLine(log);
             return NotFound(log);
         }
