@@ -10,10 +10,13 @@ import {Observable} from 'rxjs';
 })
 export class AppComponent {
   title = 'Сервис мониторинга стороннего приложения';
-  deviceSessions$ = this.apiService.getData();
+  deviceSessions: DeviceSession[] = [];
   constructor(private apiService: ApiService) { }
 
   loadDeviceSessions(): void {
-    this.apiService.getData()
+    console.log('Load device sessions');
+    this.apiService.getDeviceSessions().subscribe((deviceSessions)=>{
+      this.deviceSessions = deviceSessions;
+    })
   }
 }

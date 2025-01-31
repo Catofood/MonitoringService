@@ -37,7 +37,7 @@ public class DeviceSessionController : ControllerBase
             Console.WriteLine(log);
             return NotFound(log);
         }
-        log = $"GET: Sent {dSessions.Count} device sessions with ID: {id}.";
+        log = $"GET: Sent {dSessions.Count} device session(s) with ID: {id}.";
         Console.WriteLine(log);
         return Ok(dSessions);
     }
