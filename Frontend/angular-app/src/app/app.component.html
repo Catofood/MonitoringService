@@ -1,0 +1,18 @@
+<div class="monitoring-container">
+  <h1 class="title">{{title}}</h1>
+
+  <div class="content">
+    <div class="data-block">
+      <p>Данные для мониторинга...</p>
+      <ul>
+        <li *ngFor="let session of deviceSessions$ | async">
+          {{ session.name }} - {{ session.version }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="update-button">
+    <button (click)="loadDeviceSessions()" class="btn-update">Update</button>
+  </div>
+</div>
