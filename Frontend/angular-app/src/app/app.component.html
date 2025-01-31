@@ -1,14 +1,23 @@
 <div class="monitoring-container">
-  <h1 class="title">{{title}}</h1>
+  <h1 class="title">{{ title }}</h1>
 
   <div class="content">
     <div class="data-block">
-      <p>Данные для мониторинга...</p>
-      <ul>
-        <li *ngFor="let deviceSession of deviceSessions">
-          {{ deviceSession.name }} - {{ deviceSession.version }}
-        </li>
-      </ul>
+      <div class="device-session-cards">
+        <div *ngFor="let deviceSession of deviceSessions; let i = index" class="device-session-card">
+          <div class="session-header">
+            <h2>{{ deviceSession.name }}</h2>
+            <button class="close-btn" (click)="removeDeviceSession(deviceSession.sessionId)">✖</button>
+          </div>
+          <div class="session-body">
+            <p><strong>Version:</strong> {{ deviceSession.version }}</p>
+            <p><strong>Device Id:</strong> {{ deviceSession.id }}</p>
+            <p><strong>Session Id:</strong> {{ deviceSession.sessionId }}</p>
+            <p><strong>Start Time:</strong> {{ deviceSession.startTime }}</p>
+            <p><strong>End Time:</strong> {{ deviceSession.endTime }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

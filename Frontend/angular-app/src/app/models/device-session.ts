@@ -1,5 +1,6 @@
 export interface DeviceSession {
-  _id: string;
+  id: string;
+  sessionId: number;
   name: string;
   startTime: string;
   endTime: string;

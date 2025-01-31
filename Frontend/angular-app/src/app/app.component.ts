@@ -17,6 +17,12 @@ export class AppComponent {
     console.log('Load device sessions');
     this.apiService.getDeviceSessions().subscribe((deviceSessions)=>{
       this.deviceSessions = deviceSessions;
-    })
+    });
+  }
+
+  removeDeviceSession(sessionId: number): void {
+    this.apiService.deleteDeviceSession(sessionId).subscribe((deviceSessions)=>{
+      this.deviceSessions = deviceSessions;
+    });
   }
 }

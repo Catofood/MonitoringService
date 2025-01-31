@@ -1,0 +1,81 @@
+.monitoring-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.title {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.data-block {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.device-session-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.device-session-card {
+  width: 200px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background-color: #f9f9f9;
+
+  .session-header {
+    h2 {
+      font-size: 1.2em;
+      margin-bottom: 5px;
+    }
+
+    p {
+      font-size: 0.9em;
+      color: #555;
+    }
+  }
+
+  .session-body {
+    p {
+      font-size: 0.9em;
+      color: #333;
+      margin: 5px 0;
+    }
+  }
+}
+
+.update-button {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn-update {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
