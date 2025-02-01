@@ -61,21 +61,34 @@
   }
 }
 
-.update-button {
+.update-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
   margin-top: 20px;
-  text-align: center;
+}
+
+.btn-update, .btn-backup {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+  border-radius: 5px;
+  color: white;
+  border: none;
 }
 
 .btn-update {
-  padding: 10px 20px;
-  font-size: 1.1em;
   background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 
   &:hover {
     background-color: #0056b3;
+  }
+}
+
+.btn-backup {
+  background-color: #28a745;
+
+  &:hover {
+    background-color: #218838;
   }
 }

@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c2bd2597-4801-493f-9e09-4521d2fcb0e9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../WebApi/DTO/DeviceSessionDtoReceived.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../WebApi/DTO/DeviceSessionDtoToSend.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/angular-app/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/angular-app/src/app/app.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/angular-app/src/app/app.component.less" beforeDir="false" afterPath="$PROJECT_DIR$/angular-app/src/app/app.component.less" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/angular-app/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/angular-app/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/angular-app/src/app/models/device-session.ts" beforeDir="false" afterPath="$PROJECT_DIR$/angular-app/src/app/models/device-session.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/angular-app/src/app/services/api.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/angular-app/src/app/services/api.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/angular-app/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/angular-app/src/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../WebApi/Controllers/DeviceSessionController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../WebApi/Controllers/DeviceSessionsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../WebApi/Models/DeviceSession.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,8 +31,10 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/angular-app/angular.json" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/angular-app/angular.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/angular-app/package-lock.json" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../WebApi/DTO/DeviceSessionDtoReceived.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../WebApi/DTO/DeviceSessionDtoToSend.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -99,7 +93,7 @@
       <option name="presentableId" value="Default" />
       <updated>1738285459988</updated>
       <workItem from="1738285461202" duration="15785000" />
-      <workItem from="1738367607116" duration="71000" />
+      <workItem from="1738367607116" duration="912000" />
     </task>
     <task id="LOCAL-00001" summary="Switched frontend version to angular 15.2.10">
       <option name="closed" value="true" />
