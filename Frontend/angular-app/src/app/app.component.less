@@ -68,27 +68,53 @@
   margin-top: 20px;
 }
 
-.btn-update, .btn-backup {
+.btn-common {
   padding: 10px 20px;
   font-size: 1.1em;
   cursor: pointer;
   border-radius: 5px;
   color: white;
   border: none;
+  transition: background-color 0.3s ease;
 }
 
 .btn-update {
   background-color: #007bff;
-
-  &:hover {
-    background-color: #0056b3;
-  }
 }
 
-.btn-backup {
-  background-color: #28a745;
+.btn-update:hover {
+  background-color: #0056b3;
+}
 
-  &:hover {
-    background-color: #218838;
-  }
+.btn-backup-save {
+  background-color: #28a745;
+}
+
+.btn-backup-save:hover {
+  background-color: #218838;
+}
+
+.btn-backup-load {
+  background-color: #ffc107;
+  color: black;
+}
+
+.btn-backup-load:hover {
+  background-color: #e0a800;
+}
+
+.btn-backup-download {
+  background-color: #6f42c1;
+}
+
+.btn-backup-download:hover {
+  background-color: #5930a3;
+}
+
+.btn-backup-delete {
+  background-color: #dc3545;
+}
+
+.btn-backup-delete:hover {
+  background-color: #c82333;
 }

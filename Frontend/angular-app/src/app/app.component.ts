@@ -29,12 +29,27 @@ export class AppComponent {
     });
   }
 
-  downloadBackup(): void {
-    const dataStr = JSON.stringify(this.deviceSessions, null, 2);
-    const blob = new Blob([dataStr], {type: 'application/json'});
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'device_sessions_backup.json';
-    link.click();
+  downloadDeviceSessionsBackup(): void {
+    this.apiService.downloadDeviceSessionsBackup().subscribe((response: Blob) => {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(response);
+      link.download = 'backup_device_sessions.json';
+      link.click();
+    });
+  }
+
+  saveDeviceSessionsBackup(): void {
+    this.apiService.saveDeviceSessionsBackup().subscribe((response) => {});
+  }
+
+  deleteDeviceSessionsBackup(): void {
+    this.apiService.deleteDeviceSessionsBackup().subscribe((response) => {});
+  }
+
+  loadDeviceSessionsBackup(): void {
+    console.log('Load device sessions from backup');
+    this.apiService.getDeviceSessionsBackup().subscribe((deviceSessions)=>{
+      this.deviceSessions = deviceSessions;
+    });
   }
 }

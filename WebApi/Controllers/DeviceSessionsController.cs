@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 
@@ -7,19 +8,85 @@ namespace WebApi.Controllers;
 [ApiController]
 public class DeviceSessionsController : ControllerBase
 {
-    // Если бы в тз не было написано "Данные хранить in-memory", то я бы хранил их в PSQL
-    // И создание Id для сессии было автоинкрементным на стороне БД:
     private static int _sessionId = 1;
     private static List<DeviceSessionDtoToSend> _deviceSessions = new();
+    private const string BackupFilePath = $"backup_device_sessions.json";
 
     [HttpPost]
     public IActionResult Post([FromBody] DeviceSessionDtoReceived deviceSessionDtoReceived)
     {
         var log = $"POST at {DateTime.Now}: ";
-        _deviceSessions.Add(new DeviceSessionDtoToSend(deviceSessionDtoReceived, _sessionId++));
+        var dto = new DeviceSessionDtoToSend()
+        {
+            SessionId = _sessionId++,
+            StartTime = deviceSessionDtoReceived.StartTime,
+            EndTime = deviceSessionDtoReceived.EndTime,
+            Version = deviceSessionDtoReceived.Version,
+            Id = deviceSessionDtoReceived.Id,
+            Name = deviceSessionDtoReceived.Name
+        };
+        _deviceSessions.Add(dto);
         log += $"Successful. Device Session added. Now there's {_deviceSessions.Count} device sessions.";
         Console.WriteLine(log);
         return Ok(log);
+    }
+
+    // TODO: Logging
+    [HttpDelete("backup")]
+    public IActionResult DeleteBackup()
+    {
+        System.IO.File.Delete(BackupFilePath);
+        return Ok();
+    }
+
+    // TODO: Logging
+    [HttpPost("backup")]
+    public IActionResult CreateBackup()
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string jsonString = JsonSerializer.Serialize(_deviceSessions, options);
+        System.IO.File.WriteAllText(BackupFilePath, jsonString);
+        return Ok();
+    }
+    
+    // TODO: Logging
+    [HttpGet("backupFile")]
+    public IActionResult GetBackupFile()
+    {
+        if (System.IO.File.Exists(BackupFilePath))
+        {
+            var fileBytes = System.IO.File.ReadAllBytes(BackupFilePath);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, BackupFilePath);
+        }
+        return NotFound();
+    }
+    
+    //TODO: Logging
+    [HttpGet("backup")]
+    public IActionResult LoadBackup()
+    {
+        if (System.IO.File.Exists(BackupFilePath))
+        {
+            try
+            {
+                string json = System.IO.File.ReadAllText(BackupFilePath);
+                var deviceSessionsFromBackup = JsonSerializer.Deserialize<List<DeviceSessionDtoToSend>>(json);
+                if (deviceSessionsFromBackup != null)
+                {
+                    _deviceSessions = deviceSessionsFromBackup;
+                    return Ok(_deviceSessions);
+                }
+                else
+                {
+                    return BadRequest("Ошибка при парсинге JSON");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при загрузке бэкапа: {ex.Message}");
+            }
+        }
+        return NotFound("Файл бэкапа не найден.");
     }
 
     [HttpGet("deviceIds")]

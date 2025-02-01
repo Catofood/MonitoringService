@@ -22,8 +22,11 @@
   </div>
 
   <div class="update-buttons">
-    <button (click)="loadDeviceSessions()" class="btn-update">Update</button>
-    <button (click)="downloadBackup()" class="btn-backup">Download Backup</button>
+    <button (click)="loadDeviceSessions()" class="btn-common btn-update">Update</button>
+    <button (click)="saveDeviceSessionsBackup()" class="btn-common btn-backup-save">Save Backup</button>
+    <button (click)="loadDeviceSessionsBackup()" class="btn-common btn-backup-load">Load Backup</button>
+    <button (click)="downloadDeviceSessionsBackup()" class="btn-common btn-backup-download">Download Backup</button>
+    <button (click)="deleteDeviceSessionsBackup()" class="btn-common btn-backup-delete">Delete Backup</button>
   </div>
 
 </div>
