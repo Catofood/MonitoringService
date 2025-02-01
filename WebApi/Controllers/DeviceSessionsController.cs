@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using WebApi.Models;
 
 namespace WebApi.Controllers;
@@ -31,7 +32,6 @@ public class DeviceSessionsController : ControllerBase
         return Ok(log);
     }
 
-    // TODO: Logging
     [HttpDelete("backup")]
     public IActionResult DeleteBackup()
     {
@@ -39,17 +39,15 @@ public class DeviceSessionsController : ControllerBase
         return Ok();
     }
 
-    // TODO: Logging
     [HttpPost("backup")]
     public IActionResult CreateBackup()
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
-        string jsonString = JsonSerializer.Serialize(_deviceSessions, options);
+        var jsonString = JsonSerializer.Serialize(_deviceSessions, options);
         System.IO.File.WriteAllText(BackupFilePath, jsonString);
         return Ok();
     }
-    
-    // TODO: Logging
+
     [HttpGet("backupFile")]
     public IActionResult GetBackupFile()
     {
@@ -58,10 +56,10 @@ public class DeviceSessionsController : ControllerBase
             var fileBytes = System.IO.File.ReadAllBytes(BackupFilePath);
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, BackupFilePath);
         }
+
         return NotFound();
     }
-    
-    //TODO: Logging
+
     [HttpGet("backup")]
     public IActionResult LoadBackup()
     {
@@ -69,101 +67,126 @@ public class DeviceSessionsController : ControllerBase
         {
             try
             {
-                string json = System.IO.File.ReadAllText(BackupFilePath);
+                Log.Information("Attempting to load backup from file: {BackupFilePath} at {Timestamp}", BackupFilePath,
+                    DateTime.Now);
+
+                var json = System.IO.File.ReadAllText(BackupFilePath);
                 var deviceSessionsFromBackup = JsonSerializer.Deserialize<List<DeviceSessionDtoToSend>>(json);
+
                 if (deviceSessionsFromBackup != null)
                 {
+                    Log.Information("Successfully loaded backup. Restoring {SessionCount} device sessions from backup.",
+                        deviceSessionsFromBackup.Count);
                     _deviceSessions = deviceSessionsFromBackup;
                     return Ok(_deviceSessions);
                 }
                 else
                 {
-                    return BadRequest("Ошибка при парсинге JSON");
+                    Log.Warning(
+                        "Failed to parse backup file: Invalid JSON format in file {BackupFilePath} at {Timestamp}",
+                        BackupFilePath, DateTime.Now);
+                    return BadRequest("Error parsing JSON");
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Ошибка при загрузке бэкапа: {ex.Message}");
+                Log.Error(ex, "Error occurred while loading backup from file: {BackupFilePath} at {Timestamp}",
+                    BackupFilePath, DateTime.Now);
+                return StatusCode(500, $"Error loading backup: {ex.Message}");
             }
         }
-        return NotFound("Файл бэкапа не найден.");
+        else
+        {
+            Log.Warning("Backup file not found: {BackupFilePath} at {Timestamp}", BackupFilePath, DateTime.Now);
+            return NotFound("Backup file not found.");
+        }
     }
+
 
     [HttpGet("deviceIds")]
     public IActionResult GetNames()
     {
-        var log = $"GET at {DateTime.Now}: ";
         var ids = _deviceSessions.Select(x => x.Id).Distinct().ToList();
-        Console.WriteLine($"GET at {DateTime.Now}: Sent {ids.Count} device names.");
+
+        Log.Information("GET at {Timestamp}: Sent {DeviceCount} device names.", DateTime.Now, ids.Count);
+
         return Ok(ids);
     }
-    
+
+
     [HttpGet("deviceId/{id}")]
     public IActionResult GetByDeviceId(Guid id)
     {
-        var log = $"GET at {DateTime.Now}: ";
         var dSessions = _deviceSessions.Where(dSession => dSession.Id == id).ToList();
+
         if (dSessions.Any())
         {
-            log += $"Sent {dSessions.Count} device session(s) with ID: {id}.";
-            Console.WriteLine(log);
+            Log.Information("GET at {Timestamp}: Sent {SessionCount} device session(s) with ID: {DeviceId}.",
+                DateTime.Now, dSessions.Count, id);
             return Ok(dSessions);
         }
 
-        log += $"No device sessions with ID {id} were found.";
-        Console.WriteLine(log);
-        return NotFound(log);
+        Log.Warning("GET at {Timestamp}: No device sessions with ID {DeviceId} were found.", DateTime.Now, id);
+        return NotFound($"No device sessions with ID {id} were found.");
     }
-    
+
 
     [HttpDelete("deviceId/{id}")]
     public IActionResult DeleteById(Guid id)
     {
-        var log = $"DELETE at {DateTime.Now}: ";
         var deletedCount = _deviceSessions.RemoveAll(dSession => dSession.Id == id);
+
         if (deletedCount > 0)
         {
-            log += $"Successfully deleted {deletedCount} device session(s) with ID: {id}. {_deviceSessions.Count} device session(s) left.";
-            Console.WriteLine(log);
+            Log.Information(
+                "DELETE at {Timestamp}: Successfully deleted {DeletedCount} device session(s) with ID: {DeviceId}. {RemainingCount} device session(s) left.",
+                DateTime.Now, deletedCount, id, _deviceSessions.Count);
             return Ok(_deviceSessions);
         }
-        log += $"No device sessions with device ID {id} were found.";
-        Console.WriteLine(log);
-        return NotFound(log);
+
+        Log.Warning("DELETE at {Timestamp}: No device sessions with device ID {DeviceId} were found.", DateTime.Now,
+            id);
+        return NotFound($"No device sessions with device ID {id} were found.");
     }
-    
+
+
     [HttpDelete("sessionId/{sessionId}")]
     public IActionResult DeleteBySessionId(int sessionId)
     {
-        var log = $"DELETE at {DateTime.Now}: ";
         var deletedCount = _deviceSessions.RemoveAll(dSession => dSession.SessionId == sessionId);
+
         if (deletedCount > 0)
         {
-            log += $"Successfully deleted session with ID: {sessionId}. {_deviceSessions.Count} device session(s) left.";
-            Console.WriteLine(log);
+            Log.Information(
+                "DELETE at {Timestamp}: Successfully deleted session with ID: {SessionId}. {RemainingCount} device session(s) left.",
+                DateTime.Now, sessionId, _deviceSessions.Count);
             return Ok(_deviceSessions);
         }
-        log += $"No session with ID {sessionId} were found.";
-        Console.WriteLine(log);
-        return NotFound(log);
+
+        Log.Warning("DELETE at {Timestamp}: No session with ID {SessionId} were found.", DateTime.Now, sessionId);
+        return NotFound($"No session with ID {sessionId} were found.");
     }
-    
+
+
     [HttpDelete("name/{name}")]
     public IActionResult DeleteByName(string name)
     {
-        var log = $"DELETE at {DateTime.Now}: ";
         var deletedCount = _deviceSessions
             .RemoveAll(dSession => string.Equals(dSession.Name, name, StringComparison.CurrentCultureIgnoreCase));
+
         if (deletedCount > 0)
         {
-            log += $"Successfully deleted {deletedCount} device session(s) with name: \"{name}\". Now there's {_deviceSessions.Count} device sessions.";
-            Console.WriteLine(log);
+            Log.Information(
+                "DELETE at {Timestamp}: Successfully deleted {DeletedCount} device session(s) with name: \"{DeviceName}\". {RemainingCount} device session(s) left.",
+                DateTime.Now, deletedCount, name, _deviceSessions.Count);
             return Ok(_deviceSessions);
         }
-        log += $"No device sessions with name {name} were found.";
-        Console.WriteLine(log);
-        return NotFound(log);
+
+        Log.Warning("DELETE at {Timestamp}: No device sessions with name \"{DeviceName}\" were found.", DateTime.Now,
+            name);
+        return NotFound($"No device sessions with name {name} were found.");
     }
+
 
     [HttpGet("name/{name}")]
     public IActionResult GetByName(string name)
@@ -171,23 +194,24 @@ public class DeviceSessionsController : ControllerBase
         var dSessions = _deviceSessions
             .Where(dSession => string.Equals(dSession.Name, name, StringComparison.CurrentCultureIgnoreCase))
             .ToList();
-        var log = $"GET at {DateTime.Now}: ";
+
         if (dSessions.Any())
         {
-            log += $"Sent {dSessions.Count} device sessions with name: \"{name}\".";
-            Console.WriteLine(log);
+            Log.Information("GET at {Timestamp}: Sent {SessionCount} device session(s) with name: \"{DeviceName}\".",
+                DateTime.Now, dSessions.Count, name);
             return Ok(dSessions);
         }
-        log += $"No device sessions with name \"{name}\" were found.";
-        Console.WriteLine(log);
-        return NotFound(log);
+
+        Log.Warning("GET at {Timestamp}: No device sessions with name \"{DeviceName}\" were found.", DateTime.Now,
+            name);
+        return NotFound($"No device sessions with name \"{name}\" were found.");
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-        var log = $"GET at {DateTime.Now}: Sent {_deviceSessions.Count().ToString()} Device Sessions.";
-        Console.WriteLine(log);
+        Log.Information("GET at {Timestamp}: Sent {DeviceSessionCount} Device Sessions.", DateTime.Now,
+            _deviceSessions.Count());
         return Ok(_deviceSessions);
     }
 }

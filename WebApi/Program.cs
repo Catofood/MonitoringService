@@ -1,3 +1,6 @@
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
+
 namespace WebApi;
 
 public class Program
@@ -5,6 +8,12 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+            .WriteTo.File("logs\\log.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+        builder.Host.UseSerilog();
 
         // Add services to the container.
         builder.Services.AddAuthorization();
@@ -22,7 +31,7 @@ public class Program
                     .AllowAnyMethod()
                     .AllowAnyHeader());
         });
-        
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
